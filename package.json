@@ -1,0 +1,29 @@
+{
+  "name": "explorewebapps",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:dev": "nodemon ./src/index.mjs",
+    "start": "node ./src/index.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guruprakash-c/explorewebapps.git"
+  },
+  "keywords": [],
+  "author": "GuruPrakash - Laerer labs",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/guruprakash-c/explorewebapps/issues"
+  },
+  "homepage": "https://github.com/guruprakash-c/explorewebapps#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
