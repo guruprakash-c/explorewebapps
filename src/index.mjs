@@ -2,12 +2,29 @@ import express from 'express';
 
 const app = express();
 app.use(express.json());
-
+//MIDDLEWARE
+const loggingMiddleware = (request, response, next) => {
+    console.log(`${request.method} ~ ${request.url}`);
+    next();
+};
 const PORT = process.env.PORT || 3000;
 
-app.get("/api/v1/", (request, response) => {
+app.get("/", 
+    (request, response, next) => {
+        console.log(`${request.url} - ${request.headers.get('server')}`);
+        next();
+    }, 
+    (request, response) => {
     response
-    .status(100)
+    .status(200)
+    .send({
+        message: 'Hello 👋'
+    })
+});
+
+app.get("/api/v1/", loggingMiddleware, (request, response) => {
+    response
+    .status(200)
     .send({
         message: 'Hi 👋'
     })
