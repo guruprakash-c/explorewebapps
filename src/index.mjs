@@ -59,39 +59,52 @@ app.post("/api/v1/users", (request, response) => {
 
 });
 
-// PUT:/api/v1/users
+// PUT:/api/v1/users/{id}
 app.put("/api/v1/users/:id", (request, response) => {
     // console.log(request.body, request.params);
     if(!isNaN(request.params.id)){
-        const { body } = request;
-        const userId = parseInt(request.params.id);
-        const oldUser = users.filter((user) => user.id === userId);
-        if(oldUser){
-            // console.log(oldUser);
-            // console.log(users[userId - 1]);
-            users[userId - 1].userName = body.userName;
-            users[userId - 1].displayName = body.displayName;
-            return response.status(201).send(users);
-        }
-        return response.statusCode(404).statusMessage('Bad Request');
+        const { body, params:{id}} = request;
+        const userId = parseInt(id);
+        const oldUserId = users.findIndex((user) => user.id === userId);
+        if(oldUserId === -1) response.sendStatus(404);
+        
+        users[oldUserId] = {id: oldUserId, ...body};
+
+        return response.status(200).send(users[oldUserId]);
+
     }
-    response.send([{ message: 'Invalid user ID'}]).sendStatus(400);
+    return response.send([{ message: 'Invalid user ID'}]).sendStatus(400);
 });
 
+// PATCH:/api/v1/users{id}
+app.patch("/api/v1/users/:id", (request, response) => {
+    // console.log(request.body, request.params);
+    if(!isNaN(request.params.id)){
+        const { body, params:{id}} = request;
+        const userId = parseInt(id);
+        const oldUserId = users.findIndex((user) => user.id === userId);
+        //console.log('old user id: ', oldUserId);
+        if(oldUserId === -1) response.sendStatus(404);
+        
+        users[oldUserId] = { ...users[oldUserId], ...body };
+
+        return response.status(200).send(users[oldUserId]);
+
+    }
+    return response.send([{ message: 'Invalid user ID'}]).sendStatus(400);
+});
 
 // DELETE:/api/v1/users/{id}
 app.delete("/api/v1/users/:id", (request, response) => {
-    if(!isNaN(request.params.id)){
-        const id = parseInt(request.params.id);
-        const removeUser = users.find(
-            (u) => u.id === id
-        );
-        users.pop(removeUser);
-        if(removeUser) response.send(users).status(200);
-        else response.sendStatus(404);
-    }else{
-        response.send([{ message: 'Invalid user ID'}]).sendStatus(400);
+    const {params: { id }} = request;
+    if(!isNaN(id)){
+        const uId = parseInt(id);
+        const uIdx = users.findIndex((u) => u.id === uId)
+        if(uIdx === -1) return response.sendStatus(404);
+        users.splice(uIdx,1);
+        return response.send(users).status(200);
     }
+    return response.send([{ message: 'Invalid user ID'}]).sendStatus(400);
 }); 
 
 app.listen(PORT, ()=>{
