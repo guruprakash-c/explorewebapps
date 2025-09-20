@@ -2,6 +2,8 @@ import express from 'express';
 import commonRouter from './routes/index.mjs';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
+import passport, { Passport } from 'passport';
+import "./strategies/local-strategy.mjs";
 
 const app = express();
 app.use(express.json());
@@ -13,9 +15,11 @@ app.use(session({
     cookie: {
         maxAge: 60000 * 60
     }
-}))
-app.use(commonRouter);
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
+app.use(commonRouter);
 
 
 const PORT = process.env.PORT || 3000;

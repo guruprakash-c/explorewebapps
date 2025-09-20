@@ -8,6 +8,8 @@ const userRoutes = Router();
 
 //MIDDLEWARE
 const loggingMiddleware = (request, response, next) => {
+    //console.log(request.user);
+    if(!request.user) return response.sendStatus(401);
     console.log(`${request.method} ~ ${request.url}`);
     next();
 };
@@ -22,6 +24,7 @@ userRoutes.get("/api/v1/users",
             min: 3,
             max: 10
         }).withMessage("Must be 3-10 characters"),
+        loggingMiddleware,
     (request, response) => {
         //COOKIES
         console.log(request.headers.cookies);
@@ -47,7 +50,7 @@ userRoutes.get("/api/v1/users",
 });
 
 // GET:/api/v1/users/{id}
-userRoutes.get("/api/v1/users/:id", (request, response) => {
+userRoutes.get("/api/v1/users/:id",loggingMiddleware, (request, response) => {
     if (!isNaN(request.params.id)) {
         const id = parseInt(request.params.id);
         const filteredUsers = users.find(
@@ -62,7 +65,8 @@ userRoutes.get("/api/v1/users/:id", (request, response) => {
 
 // POST:/api/v1/users
 userRoutes.post("/api/v1/users",
-    checkSchema(UserValidationSchema),
+    checkSchema(UserValidationSchema), 
+    loggingMiddleware,
     (request, response) => {
         const result = validationResult(request);
         // console.log(result);
@@ -82,7 +86,7 @@ userRoutes.post("/api/v1/users",
 });
 
 // PUT:/api/v1/users/{id}
-userRoutes.put("/api/v1/users/:id", (request, response) => {
+userRoutes.put("/api/v1/users/:id",loggingMiddleware, (request, response) => {
     // console.log(request.body, request.params);
     if (!isNaN(request.params.id)) {
         const { body, params: { id } } = request;
@@ -117,7 +121,7 @@ userRoutes.patch("/api/v1/users/:id",loggingMiddleware, (request, response) => {
 });
 
 // DELETE:/api/v1/users/{id}
-userRoutes.delete("/api/v1/users/:id", (request, response) => {
+userRoutes.delete("/api/v1/users/:id",loggingMiddleware, (request, response) => {
     const { params: { id } } = request;
     if (!isNaN(id)) {
         const uId = parseInt(id);
