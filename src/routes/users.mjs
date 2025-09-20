@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { query, validationResult, body, matchedData, checkSchema } from 'express-validator';
 import { UserValidationSchema } from '../utils/ValidationSchema.mjs';
-import { users } from '../utils/constants.mjs';
+import users  from '../utils/constants.mjs';
 
 
 const userRoutes = Router();
@@ -27,6 +27,15 @@ userRoutes.get("/api/v1/users",
         console.log(request.headers.cookies);
         console.log(request.cookies);
         console.log(request.signedCookies.howdy);
+        //SESSION
+        console.log(request.session.id);
+        request.sessionStore.get(request.session.id, (err, sessionData) => {
+            if(err){
+                console.error(err);
+                throw err;
+            }
+            console.log(sessionData);
+        })
 
         const result = validationResult(request);
         console.log(result);
