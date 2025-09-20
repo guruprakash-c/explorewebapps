@@ -8,6 +8,7 @@ commonRouter.get("/",
         next();
     },
     (request, response) => {
+        response.cookie("howdy", "DEVstoc", { maxAge: 30000, signed: true })
         response
             .status(200)
             .send({

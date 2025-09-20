@@ -23,6 +23,11 @@ userRoutes.get("/api/v1/users",
             max: 10
         }).withMessage("Must be 3-10 characters"),
     (request, response) => {
+        //COOKIES
+        console.log(request.headers.cookies);
+        console.log(request.cookies);
+        console.log(request.signedCookies.howdy);
+
         const result = validationResult(request);
         console.log(result);
         //console.log(request.query);

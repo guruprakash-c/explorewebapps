@@ -1,8 +1,10 @@
 import express from 'express';
 import commonRouter from './routes/index.mjs';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 app.use(express.json());
+app.use(cookieParser("devstoc"));
 app.use(commonRouter);
 
 
